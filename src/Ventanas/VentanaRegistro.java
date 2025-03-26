@@ -69,12 +69,13 @@ public class VentanaRegistro extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
+		panel.setBackground(new Color(0, 64, 128));
 		panel.setBounds(10, 10, 416, 32);
 		contentPane.add(panel);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JLabel lblNewLabel = new JLabel("Bienvenido,crea tu cuenta con nosotros");
-		lblNewLabel.setForeground(new Color(0, 128, 255));
+		lblNewLabel.setForeground(new Color(255, 255, 255));
 		lblNewLabel.setFont(new Font("Segoe UI Black", Font.BOLD, 18));
 		panel.add(lblNewLabel);
 		

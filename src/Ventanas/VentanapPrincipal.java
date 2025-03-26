@@ -23,6 +23,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.Border;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ImageIcon;
 
 public class VentanapPrincipal extends JFrame implements ActionListener {
 
@@ -110,6 +111,17 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		lblNewLabel_1.setFont(new Font("Segoe UI Black", Font.BOLD, 16));
 		lblNewLabel_1.setBounds(75, 10, 126, 34);
 		panel.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("New label");
+		lblNewLabel_2.setIcon(new ImageIcon(VentanapPrincipal.class.getResource("/Imagenes/fitness-7071849_1920 (1)2.png")));
+		lblNewLabel_2.setBounds(185, 2, 35, 58);
+		panel.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_2_1 = new JLabel("New label");
+		lblNewLabel_2_1.setForeground(new Color(192, 192, 192));
+		lblNewLabel_2_1.setIcon(new ImageIcon(VentanapPrincipal.class.getResource("/Imagenes/fitness-7071849_1920 (1).png")));
+		lblNewLabel_2_1.setBounds(12, 1, 35, 58);
+		panel.add(lblNewLabel_2_1);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(0, 128, 255));
