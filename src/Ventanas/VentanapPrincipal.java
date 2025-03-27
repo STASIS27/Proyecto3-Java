@@ -56,6 +56,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	public VentanapPrincipal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 64, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -90,6 +91,10 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		textCorreo.setColumns(10);
 		
 		JButton btnIniciarSesion = new JButton("Iniciar Sesión");
+		btnIniciarSesion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnIniciarSesion.setBounds(41, 162, 149, 29);
 		btnIniciarSesion.setForeground(new Color(0, 128, 255));
 		btnIniciarSesion.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
