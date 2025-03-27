@@ -142,7 +142,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		lblIniciaSesinComo.setForeground(Color.BLUE);
 		lblIniciaSesinComo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblIniciaSesinComo.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
-		lblIniciaSesinComo.setBounds(47, 186, 178, 25);
+		lblIniciaSesinComo.setBounds(44, 186, 178, 25);
 		lblIniciaSesinComo.addMouseListener(new MouseAdapter() {
 			 @Override
 			public void mouseClicked(MouseEvent e) {
