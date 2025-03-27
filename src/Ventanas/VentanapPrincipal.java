@@ -12,13 +12,18 @@ import java.awt.FlowLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Cursor;
+
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
+import javax.swing.JTabbedPane;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.Border;
@@ -33,6 +38,8 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	private JPanel panel;
 	private JButton btnRegistrarse;
 	private JPasswordField passwordField;
+	private JLabel lblIniciaSesinComo;
+	private JTabbedPane tabbedPane;
 
 	/**
 	 * Launch the application.
@@ -60,14 +67,16 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(0, 64, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
+		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
 		
 		panel = new JPanel();
 		panel.setBounds(23, 26, 230, 211);
 		panel.setBorder(new LineBorder(Color.BLACK, 2, true));
 		contentPane.add(panel);
+		
 		
 		
 		JLabel lblIniciarSesion = new JLabel("Iniciar Sesión");
@@ -96,6 +105,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 			}
 		});
 		btnIniciarSesion.setBounds(41, 162, 149, 29);
+		btnIniciarSesion.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnIniciarSesion.setForeground(new Color(0, 128, 255));
 		btnIniciarSesion.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
 		btnIniciarSesion.setBackground(Color.WHITE);
@@ -128,6 +138,22 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		lblNewLabel_2_1.setBounds(12, 1, 35, 58);
 		panel.add(lblNewLabel_2_1);
 		
+		JLabel lblIniciaSesinComo = new JLabel("<html><u>Iniciar sesión como monitor</u></html>");
+		lblIniciaSesinComo.setForeground(Color.BLUE);
+		lblIniciaSesinComo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		lblIniciaSesinComo.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
+		lblIniciaSesinComo.setBounds(47, 186, 178, 25);
+		lblIniciaSesinComo.addMouseListener(new MouseAdapter() {
+			 @Override
+			public void mouseClicked(MouseEvent e) {
+		        VentanaMonitores vm = new VentanaMonitores(); 
+			        vm.setVisible(true);
+				     dispose(); 
+				    }
+			 });
+			
+		panel.add(lblIniciaSesinComo);
+		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(0, 128, 255));
 		panel_1.setBounds(10, 47, 416, 170);
@@ -144,6 +170,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		
 		btnRegistrarse = new JButton("Registrarse");
 		btnRegistrarse.addActionListener(this);
+		btnRegistrarse.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnRegistrarse.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
 		btnRegistrarse.setBackground(new Color(255, 255, 255));
 		btnRegistrarse.setForeground(new Color(0, 128, 255));
@@ -162,6 +189,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		lbliniciarsesion.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
 		lbliniciarsesion.setBounds(289, 62, 147, 13);
 		panel_1.add(lbliniciarsesion);
+		
 	}
 	public Border getPanelBorder() {
 		return panel.getBorder();
@@ -176,7 +204,9 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		        VentanaRegistro vr = new VentanaRegistro();
 		        vr.setVisible(true);
 		        dispose(); 
-		
+		  }
+
+	 
 	}
-}
-}
+	}
+

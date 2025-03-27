@@ -8,6 +8,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import java.awt.Color;
+import java.awt.Cursor;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -216,6 +218,7 @@ public class VentanaRegistro extends JFrame implements ActionListener {
 		
 		btnNewButton = new JButton("Volver");
 		btnNewButton.setBackground(new Color(255, 255, 255));
+		btnNewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnNewButton.setForeground(new Color(0, 128, 255));
 		btnNewButton.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
 		btnNewButton.setBounds(221, 210, 96, 32);
@@ -224,6 +227,7 @@ public class VentanaRegistro extends JFrame implements ActionListener {
 		
 		btnNewButton_1 = new JButton("Registrar");
 		btnNewButton_1.setForeground(new Color(0, 128, 255));
+		btnNewButton_1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnNewButton_1.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
 		btnNewButton_1.setBounds(330, 209, 96, 32);
 		btnNewButton_1.addActionListener(this);
