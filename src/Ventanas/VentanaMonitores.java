@@ -143,13 +143,15 @@ public class VentanaMonitores extends JFrame implements ActionListener {
 			dispose();
 		}
 		if (e.getSource().equals(btnIniciarSesion)) {
-			if(pswContra.getText().equals(password) && textUsuario.getText().equals(usuario)) {
-			VentanaMenuMonitores vmm = new VentanaMenuMonitores();
+		    if (pswContra.getText().isEmpty() || textUsuario.getText().isEmpty()) {
+		        JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+		    } else if (pswContra.getText().equals(password) && textUsuario.getText().equals(usuario)) {
+		        VentanaMenuMonitores vmm = new VentanaMenuMonitores();
 			vmm.setVisible(true);
 			dispose();
 			}
 			else {
-				JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+				JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 

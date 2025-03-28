@@ -10,6 +10,8 @@ import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -37,9 +39,12 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	private JTextField textCorreo;
 	private JPanel panel;
 	private JButton btnRegistrarse;
+	private JButton btnIniciarSesion;
 	private JPasswordField passwordField;
 	private JLabel lblIniciaSesinComo;
 	private JTabbedPane tabbedPane;
+	private final String usuario = "usuario123";
+	private final String password = "123usuario";
 
 	/**
 	 * Launch the application.
@@ -83,37 +88,36 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		lblIniciarSesion.setBounds(47, 2, 185, 99);
 		lblIniciarSesion.setForeground(new Color(0, 128, 255));
 		lblIniciarSesion.setFont(new Font("Segoe UI Black", Font.BOLD, 18));
+		panel.add(lblIniciarSesion);
 		
-		JLabel lblNewLabel = new JLabel("Correo");
-		lblNewLabel.setBounds(12, 88, 65, 25);
-		lblNewLabel.setForeground(new Color(0, 128, 255));
-		lblNewLabel.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
+		JLabel lblCorreo = new JLabel("Correo");
+		lblCorreo.setBounds(12, 88, 65, 25);
+		lblCorreo.setForeground(new Color(0, 128, 255));
+		lblCorreo.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
+		panel.add(lblCorreo);
 		
 		JLabel lblContrasea = new JLabel("Contraseña");
 		lblContrasea.setBounds(12, 127, 83, 25);
 		lblContrasea.setForeground(new Color(0, 128, 255));
 		lblContrasea.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
+		panel.add(lblContrasea);
+		
 		
 		textCorreo = new JTextField();
 		textCorreo.setBounds(75, 92, 147, 19);
 		textCorreo.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
 		textCorreo.setColumns(10);
+		panel.add(textCorreo);
 		
-		JButton btnIniciarSesion = new JButton("Iniciar Sesión");
-		btnIniciarSesion.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		panel.setLayout(null);
+		
+		btnIniciarSesion = new JButton("Iniciar Sesión");
+		btnIniciarSesion.addActionListener(this);
 		btnIniciarSesion.setBounds(41, 162, 149, 29);
 		btnIniciarSesion.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnIniciarSesion.setForeground(new Color(0, 128, 255));
 		btnIniciarSesion.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
 		btnIniciarSesion.setBackground(Color.WHITE);
-		panel.setLayout(null);
-		panel.add(lblNewLabel);
-		panel.add(lblIniciarSesion);
-		panel.add(textCorreo);
-		panel.add(lblContrasea);
 		panel.add(btnIniciarSesion);
 		
 		passwordField = new JPasswordField();
@@ -198,15 +202,25 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		panel.setBorder(border);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		  if(e.getSource().equals(btnRegistrarse)) {
-		        VentanaRegistro vr = new VentanaRegistro();
-		        vr.setVisible(true);
-		        dispose(); 
-		  }
-
-	 
-	}
-	}
+        if (e.getSource() == btnRegistrarse) { 
+            VentanaRegistro vr = new VentanaRegistro();
+            vr.setVisible(true);
+            dispose();
+        } else if (e.getSource() == btnIniciarSesion) {  
+            if (passwordField.getText().isEmpty() || textCorreo.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (passwordField.getText().equals(password) && textCorreo.getText().equals(usuario)) {
+                VentanaUsuarios vu = new VentanaUsuarios();
+                vu.setVisible(true);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+	
+}
 

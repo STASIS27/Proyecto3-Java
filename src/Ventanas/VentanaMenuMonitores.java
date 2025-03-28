@@ -60,14 +60,25 @@ public class VentanaMenuMonitores extends JFrame implements ActionListener {
 		JPanel panel_1 = new JPanel();
 		panel_1.setLayout(null);
 		panel_1.setBorder(new LineBorder(Color.BLACK, 2, true));
-		panel_1.setBounds(10, 10, 126, 27);
+		panel_1.setBounds(134, 9, 166, 35);
 		contentPane.add(panel_1);
 		
 		JLabel lblNewLabel_1 = new JLabel("DAM FIT");
-		lblNewLabel_1.setBounds(24, 0, 126, 24);
+		lblNewLabel_1.setBounds(47, 5, 126, 24);
 		panel_1.add(lblNewLabel_1);
 		lblNewLabel_1.setForeground(new Color(0, 0, 128));
 		lblNewLabel_1.setFont(new Font("Segoe UI Black", Font.BOLD, 16));
+		
+		JLabel lblNewLabel_2_1_1 = new JLabel("New label");
+		lblNewLabel_2_1_1.setIcon(new ImageIcon(VentanaMenuMonitores.class.getResource("/Imagenes/fitness-7071849_1920 (1).png")));
+		lblNewLabel_2_1_1.setForeground(Color.LIGHT_GRAY);
+		lblNewLabel_2_1_1.setBounds(10, -13, 35, 57);
+		panel_1.add(lblNewLabel_2_1_1);
+		
+		JLabel lblNewLabel_2_2 = new JLabel("New label");
+		lblNewLabel_2_2.setIcon(new ImageIcon(VentanaMenuMonitores.class.getResource("/Imagenes/fitness-7071849_1920 (1)2.png")));
+		lblNewLabel_2_2.setBounds(128, -11, 35, 58);
+		panel_1.add(lblNewLabel_2_2);
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 47, 126, 96);
