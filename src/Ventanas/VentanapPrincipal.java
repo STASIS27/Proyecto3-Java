@@ -31,6 +31,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.Border;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ImageIcon;
+import javax.swing.JToggleButton;
 
 public class VentanapPrincipal extends JFrame implements ActionListener {
 
@@ -45,6 +46,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	private JTabbedPane tabbedPane;
 	private final String usuario = "usuario123";
 	private final String password = "123usuario";
+	private JToggleButton tgOjo;
 
 	/**
 	 * Launch the application.
@@ -78,6 +80,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		
 		
 		panel = new JPanel();
+		panel.setBackground(new Color(230, 238, 245));
 		panel.setBounds(23, 26, 230, 211);
 		panel.setBorder(new LineBorder(Color.BLACK, 2, true));
 		contentPane.add(panel);
@@ -104,7 +107,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		
 		
 		textCorreo = new JTextField();
-		textCorreo.setBounds(75, 92, 147, 19);
+		textCorreo.setBounds(75, 92, 115, 19);
 		textCorreo.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
 		textCorreo.setColumns(10);
 		panel.add(textCorreo);
@@ -122,7 +125,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		
 		passwordField = new JPasswordField();
 		passwordField.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
-		passwordField.setBounds(75, 130, 147, 19);
+		passwordField.setBounds(75, 130, 115, 19);
 		panel.add(passwordField);
 		
 		JLabel lblNewLabel_1 = new JLabel("DAM FIT");
@@ -139,7 +142,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		JLabel lblNewLabel_2_1 = new JLabel("New label");
 		lblNewLabel_2_1.setForeground(new Color(192, 192, 192));
 		lblNewLabel_2_1.setIcon(new ImageIcon(VentanapPrincipal.class.getResource("/Imagenes/fitness-7071849_1920 (1).png")));
-		lblNewLabel_2_1.setBounds(12, 1, 35, 58);
+		lblNewLabel_2_1.setBounds(12, 2, 35, 58);
 		panel.add(lblNewLabel_2_1);
 		
 		JLabel lblIniciaSesinComo = new JLabel("<html><u>Iniciar sesión como monitor</u></html>");
@@ -155,8 +158,50 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 				     dispose(); 
 				    }
 			 });
+		
+		tgOjo = new JToggleButton("");
+		ImageIcon ojoAbierto = new ImageIcon(VentanapPrincipal.class.getResource("/Imagenes/abierto.png"));
+		ImageIcon ojoCerrado = new ImageIcon(VentanapPrincipal.class.getResource("/Imagenes/cerrado.png"));
+
+		// Establecer el icono inicial (asumimos que la contraseña es visible por defecto)
+		tgOjo.setIcon(new ImageIcon(VentanapPrincipal.class.getResource("/Imagenes/abierto.png")));
+		tgOjo.setSelected(false);
+
+		// Agregar el listener para cambiar el icono y mostrar/ocultar contraseña
+		tgOjo.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        if (tgOjo.isSelected()) {
+		            // Mostrar contraseña
+		            passwordField.setEchoChar((char) 0);
+		            tgOjo.setIcon(ojoCerrado);  // Cambiar a ojo tachado
+		        } else {
+		            // Ocultar contraseña
+		            passwordField.setEchoChar('*');
+		            tgOjo.setIcon(ojoAbierto);  // Cambiar a ojo normal
+		        }
+		    }
+		});
+		tgOjo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (tgOjo.isSelected()) {
+                    // Cambiar a texto visible
+                    passwordField.setEchoChar((char) 0);
+                } else {
+                    // Regresar a texto oculto
+                    passwordField.setEchoChar('*');
+                }
+			}
+		});
+		tgOjo.setSelected(true);
+		tgOjo.setBounds(200, 130, 22, 19);
+		//tgOjo.setPreferredSize(new Dimension(10, 10));
+		panel.add(tgOjo);
+		
 			
 		panel.add(lblIniciaSesinComo);
+		
+		
+		
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(0, 128, 255));
@@ -195,12 +240,16 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 		panel_1.add(lbliniciarsesion);
 		
 	}
+	public JToggleButton getTgOjo() {
+		return getTgOjo();
+	}
 	public Border getPanelBorder() {
 		return panel.getBorder();
 	}
 	public void setPanelBorder(Border border) {
 		panel.setBorder(border);
 	}
+	
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -221,6 +270,5 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
             }
         }
     }
-	
 }
 
