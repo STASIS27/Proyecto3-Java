@@ -9,18 +9,22 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
-public class VentanaUsuarios extends JFrame {
+public class VentanaUsuarios extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
+	private JButton btnVolver; 
 
 	/**
 	 * Launch the application.
@@ -178,6 +182,23 @@ public class VentanaUsuarios extends JFrame {
 		lblNewLabel_2_2.setIcon(new ImageIcon(VentanaUsuarios.class.getResource("/Imagenes/fitness-7071849_1920 (1)2.png")));
 		lblNewLabel_2_2.setBounds(128, -11, 35, 58);
 		panel_1_1.add(lblNewLabel_2_2);
+		
+		btnVolver = new JButton("Volver");
+		btnVolver.addActionListener(this);
+		btnVolver.setForeground(new Color(0, 128, 255));
+		btnVolver.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
+		btnVolver.setBackground(Color.WHITE);
+		btnVolver.setBounds(168, 209, 101, 32);
+		contentPane.add(btnVolver);
 	}
-
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		 if(e.getSource().equals(btnVolver)) {
+		        VentanapPrincipal vp = new VentanapPrincipal();
+		        vp.setVisible(true);
+		        dispose(); 
+		
+	}
+}
 }
