@@ -26,7 +26,7 @@ public class VentanaMenuMonitores extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JButton btnVolver;
+	private JButton btnVolver,btnVerClientes,btnVerClases,btnAñadirClase,btnEliminarClases;
 
 	/**
 	 * Launch the application.
@@ -84,8 +84,9 @@ public class VentanaMenuMonitores extends JFrame implements ActionListener {
 		panel.setBounds(10, 47, 126, 96);
 		contentPane.add(panel);
 		
-		JButton btnAñadirClase = new JButton("AÑADIR CLASE");
+		btnAñadirClase = new JButton("AÑADIR CLASE");
 		btnAñadirClase.setBounds(10, 5, 106, 23);
+		btnAñadirClase.addActionListener(this);
 		btnAñadirClase.setBackground(new Color(0, 128, 255));
 		btnAñadirClase.setFont(new Font("Segoe UI Black", Font.BOLD, 8));
 		btnAñadirClase.setForeground(new Color(255, 255, 255));
@@ -127,7 +128,8 @@ public class VentanaMenuMonitores extends JFrame implements ActionListener {
 		lblNewLabel_5.setForeground(new Color(255, 255, 255));
 		lblNewLabel_5.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
 		
-		JButton btnEliminarClases = new JButton("ELIMINAR CLASE");
+		btnEliminarClases = new JButton("ELIMINAR CLASE");
+		btnEliminarClases.addActionListener(this);
 		btnEliminarClases.setForeground(new Color(0, 128, 255));
 		btnEliminarClases.setFont(new Font("Segoe UI Black", Font.BOLD, 8));
 		btnEliminarClases.setBackground(Color.WHITE);
@@ -176,7 +178,8 @@ public class VentanaMenuMonitores extends JFrame implements ActionListener {
 		panel_2_3.setBounds(300, 47, 126, 96);
 		contentPane.add(panel_2_3);
 		
-		JButton btnVerClases = new JButton("VER CLASES");
+		btnVerClases = new JButton("VER CLASES");
+		btnVerClases.addActionListener(this);
 		btnVerClases.setBackground(new Color(255, 255, 255));
 		btnVerClases.setForeground(new Color(0, 128, 255));
 		btnVerClases.setFont(new Font("Segoe UI Black", Font.BOLD, 8));
@@ -232,7 +235,8 @@ public class VentanaMenuMonitores extends JFrame implements ActionListener {
 		panel_2_4.setBounds(300, 153, 126, 96);
 		contentPane.add(panel_2_4);
 		
-		JButton btnVerClientes = new JButton("VER CLIENTES");
+		btnVerClientes = new JButton("VER CLIENTES");
+		btnVerClientes.addActionListener(this);
 		btnVerClientes.setBounds(10, 10, 106, 21);
 		btnVerClientes.setBackground(new Color(0, 128, 255));
 		btnVerClientes.setForeground(new Color(255, 255, 255));
@@ -275,7 +279,34 @@ public class VentanaMenuMonitores extends JFrame implements ActionListener {
 		 if(e.getSource().equals(btnVolver)) {
 		        VentanaMonitores vm = new VentanaMonitores();
 		        vm.setVisible(true);
-		        dispose(); 
+		        dispose();
+		 }
+		        if(e.getSource().equals(btnVerClientes)) {
+			        VentanaVerClientes vvc = new VentanaVerClientes();
+			        vvc.setVisible(true);
+			        dispose();
+			        
+		
+	}
+		        if(e.getSource().equals(btnVerClases)) {
+			        VentanaVerClases vvcc = new VentanaVerClases();
+			        vvcc.setVisible(true);
+			        dispose();
+			        
+		
+	}
+		        if(e.getSource().equals(btnAñadirClase)) {
+			        VentanaAñadirClase vac = new VentanaAñadirClase();
+			        vac.setVisible(true);
+			        dispose();
+			        
+		
+	}
+		        if(e.getSource().equals(btnEliminarClases)) {
+			        VentanaEliminarClase vec = new VentanaEliminarClase();
+			        vec.setVisible(true);
+			        dispose();
+			        
 		
 	}
 }

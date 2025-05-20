@@ -8,6 +8,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +17,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
@@ -68,23 +72,47 @@ public class VentanaUsuarios extends JFrame implements ActionListener{
 		panel.setBounds(23, 26, 230, 211);
 		contentPane_1.add(panel);
 		
-		JLabel lblIniciarSesion = new JLabel("Iniciar Sesión");
-		lblIniciarSesion.setForeground(new Color(0, 128, 255));
-		lblIniciarSesion.setFont(new Font("Segoe UI Black", Font.BOLD, 18));
-		lblIniciarSesion.setBounds(47, 2, 185, 99);
-		panel.add(lblIniciarSesion);
-		
-		JLabel lblCorreo = new JLabel("Correo");
-		lblCorreo.setForeground(new Color(0, 128, 255));
-		lblCorreo.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
-		lblCorreo.setBounds(12, 88, 65, 25);
-		panel.add(lblCorreo);
-		
-		JLabel lblContrasea = new JLabel("Contraseña");
-		lblContrasea.setForeground(new Color(0, 128, 255));
-		lblContrasea.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
-		lblContrasea.setBounds(12, 127, 83, 25);
-		panel.add(lblContrasea);
+		JPanel panel_2_1 = new JPanel();
+		panel_2_1.setBackground(new Color(231, 231, 231));
+		panel_2_1.setBounds(20, 72, 394, 139);
+		contentPane.add(panel_2_1);
+		panel_2_1.setLayout(null);
+	
+		String[] columnas = {"Clase", "Horario"};
+		String[][] datos = {
+		    {"Yoga", "Lunes 10:00"},
+		    {"Pilates", "Miércoles 12:00"},
+		    {"Spinning", "Viernes 18:00"}
+		};
+
+		JTable tablaClases = new JTable(datos, columnas) {
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false; 
+		    }
+		};
+
+		tablaClases.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		tablaClases.setRowHeight(20);
+
+		JScrollPane scrollPane = new JScrollPane(tablaClases);
+		scrollPane.setBounds(10, 50, 370, 60);
+		panel_2_1.add(scrollPane);
+
+
+		JButton btnApuntarse = new JButton("Apuntarse");
+		btnApuntarse.setForeground(new Color(0, 128, 255));
+		btnApuntarse.setFont(new Font("Segoe UI Black", Font.PLAIN, 10));
+		btnApuntarse.setBounds(60, 115, 100, 20);
+		panel_2_1.add(btnApuntarse);
+
+	
+		JButton btnDesapuntarse = new JButton("Desapuntarse");
+		btnDesapuntarse.setForeground(new Color(0, 128, 255));
+		btnDesapuntarse.setFont(new Font("Segoe UI Black", Font.PLAIN, 10));
+		btnDesapuntarse.setBounds(220, 115, 120, 20);
+		panel_2_1.add(btnDesapuntarse);
+
 		
 		textField = new JTextField();
 		textField.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
@@ -92,40 +120,6 @@ public class VentanaUsuarios extends JFrame implements ActionListener{
 		textField.setBounds(75, 92, 147, 19);
 		panel.add(textField);
 		
-		JButton btnIniciarSesion = new JButton("Iniciar Sesión");
-		btnIniciarSesion.setForeground(new Color(0, 128, 255));
-		btnIniciarSesion.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
-		btnIniciarSesion.setBackground(Color.WHITE);
-		btnIniciarSesion.setBounds(41, 162, 149, 29);
-		panel.add(btnIniciarSesion);
-		
-		passwordField = new JPasswordField();
-		passwordField.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
-		passwordField.setBounds(75, 130, 147, 19);
-		panel.add(passwordField);
-		
-		JLabel lblNewLabel_1 = new JLabel("DAM FIT");
-		lblNewLabel_1.setForeground(new Color(0, 0, 128));
-		lblNewLabel_1.setFont(new Font("Segoe UI Black", Font.BOLD, 16));
-		lblNewLabel_1.setBounds(75, 10, 126, 34);
-		panel.add(lblNewLabel_1);
-		
-		JLabel lblNewLabel_2 = new JLabel("New label");
-		lblNewLabel_2.setIcon(new ImageIcon(VentanaUsuarios.class.getResource("/Imagenes/fitness-7071849_1920 (1)2.png")));
-		lblNewLabel_2.setBounds(185, 2, 35, 58);
-		panel.add(lblNewLabel_2);
-		
-		JLabel lblNewLabel_2_1 = new JLabel("New label");
-		lblNewLabel_2_1.setIcon(new ImageIcon(VentanaUsuarios.class.getResource("/Imagenes/fitness-7071849_1920 (1).png")));
-		lblNewLabel_2_1.setForeground(Color.LIGHT_GRAY);
-		lblNewLabel_2_1.setBounds(12, 1, 35, 58);
-		panel.add(lblNewLabel_2_1);
-		
-		JLabel lblIniciaSesinComo = new JLabel("<html><u>Iniciar sesión como monitor</u></html>");
-		lblIniciaSesinComo.setForeground(Color.BLUE);
-		lblIniciaSesinComo.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
-		lblIniciaSesinComo.setBounds(44, 186, 178, 25);
-		panel.add(lblIniciaSesinComo);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setLayout(null);
@@ -134,31 +128,6 @@ public class VentanaUsuarios extends JFrame implements ActionListener{
 		panel_1.setBounds(10, 47, 416, 170);
 		contentPane_1.add(panel_1);
 		
-		JLabel lblanNoTienes = new JLabel("¿Aún no \r\ntienes cuenta?");
-		lblanNoTienes.setForeground(Color.WHITE);
-		lblanNoTienes.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
-		lblanNoTienes.setBackground(UIManager.getColor("Button.background"));
-		lblanNoTienes.setBounds(244, -21, 182, 93);
-		panel_1.add(lblanNoTienes);
-		
-		JButton btnRegistrarse = new JButton("Registrarse");
-		btnRegistrarse.setForeground(new Color(0, 128, 255));
-		btnRegistrarse.setFont(new Font("Segoe UI Black", Font.BOLD, 14));
-		btnRegistrarse.setBackground(Color.WHITE);
-		btnRegistrarse.setBounds(265, 82, 129, 29);
-		panel_1.add(btnRegistrarse);
-		
-		JLabel lblRegistrateMensaje = new JLabel("Registrate para poder");
-		lblRegistrateMensaje.setForeground(Color.WHITE);
-		lblRegistrateMensaje.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
-		lblRegistrateMensaje.setBounds(269, 39, 193, 13);
-		panel_1.add(lblRegistrateMensaje);
-		
-		JLabel lbliniciarsesion = new JLabel("Iniciar Sesion");
-		lbliniciarsesion.setForeground(Color.WHITE);
-		lbliniciarsesion.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
-		lbliniciarsesion.setBounds(289, 62, 147, 13);
-		panel_1.add(lbliniciarsesion);
 		
 		JPanel panel_1_1 = new JPanel();
 		panel_1_1.setLayout(null);
@@ -182,15 +151,57 @@ public class VentanaUsuarios extends JFrame implements ActionListener{
 		lblNewLabel_2_2.setIcon(new ImageIcon(VentanaUsuarios.class.getResource("/Imagenes/fitness-7071849_1920 (1)2.png")));
 		lblNewLabel_2_2.setBounds(128, -11, 35, 58);
 		panel_1_1.add(lblNewLabel_2_2);
+		panel_2_1.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Clases Disponibles");
+		lblNewLabel.setForeground(new Color(0, 128, 255));
+		lblNewLabel.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
+		lblNewLabel.setBounds(38, -20, 132, 73);
+		panel_2_1.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("La duración de las clases es de 1 hora");
+		lblNewLabel_1.setForeground(new Color(0, 128, 255));
+		lblNewLabel_1.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
+		lblNewLabel_1.setBounds(38, 0, 302, 73);
+		panel_2_1.add(lblNewLabel_1);
 		
 		btnVolver = new JButton("Volver");
 		btnVolver.addActionListener(this);
 		btnVolver.setForeground(new Color(0, 128, 255));
 		btnVolver.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
 		btnVolver.setBackground(Color.WHITE);
-		btnVolver.setBounds(168, 209, 101, 32);
+		btnVolver.setBounds(313, 221, 101, 32);
 		contentPane.add(btnVolver);
+	
+		btnApuntarse.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        int filaSeleccionada = tablaClases.getSelectedRow();
+		        if (filaSeleccionada != -1) {
+		            String clase = (String) tablaClases.getValueAt(filaSeleccionada, 0);
+		            JOptionPane.showMessageDialog(null, "Te has apuntado a la clase de " + clase + ".");
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Selecciona una clase para apuntarte.", "Aviso", JOptionPane.WARNING_MESSAGE);
+		        }
+		    }
+		});
+
+		btnDesapuntarse.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        int filaSeleccionada = tablaClases.getSelectedRow();
+		        if (filaSeleccionada != -1) {
+		            String clase = (String) tablaClases.getValueAt(filaSeleccionada, 0);
+		            JOptionPane.showMessageDialog(null, "Te has desapuntado de la clase de " + clase + ".");
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Selecciona una clase para desapuntarte.", "Aviso", JOptionPane.WARNING_MESSAGE);
+		        }
+		    }
+		});
+
+		
+		
 	}
+	
+	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {

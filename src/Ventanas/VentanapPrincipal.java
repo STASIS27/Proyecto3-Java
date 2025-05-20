@@ -1,4 +1,4 @@
- package Ventanas;
+package Ventanas;
 
 import java.awt.EventQueue;
 
@@ -6,6 +6,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
+import com.mysql.jdbc.Connection;
+
+import BaseDeDatos.ConexionBD;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -22,6 +26,8 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
@@ -254,21 +260,42 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnRegistrarse) { 
-            VentanaRegistro vr = new VentanaRegistro();
-            vr.setVisible(true);
-            dispose();
-        } else if (e.getSource() == btnIniciarSesion) {  
-            if (passwordField.getText().isEmpty() || textCorreo.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (passwordField.getText().equals(password) && textCorreo.getText().equals(usuario)) {
-                VentanaUsuarios vu = new VentanaUsuarios();
-                vu.setVisible(true);
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-}
+	    if (e.getSource() == btnRegistrarse) {
+	        VentanaRegistro vr = new VentanaRegistro();
+	        vr.setVisible(true);
+	        dispose();
+	    }if (e.getSource() == btnIniciarSesion) {
+	        String correo = textCorreo.getText();
+	        String contra = String.valueOf(passwordField.getPassword());
 
+	        if (correo.isEmpty() || contra.isEmpty()) {
+	            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+	            return;
+	        }
+
+	        // Lógica de conexión a la base de datos
+	        try (Connection con = (Connection) ConexionBD.getConexion()) {
+	        	String query = "SELECT p.* FROM persona p JOIN cliente c ON p.Id_Persona = c.Id_Persona_Aux WHERE p.Correo = ? AND p.Contraseña = ?";
+                PreparedStatement ps = con.prepareStatement(query);
+	            ps.setString(1, correo);
+	            ps.setString(2, contra);
+
+	            ResultSet rs = ps.executeQuery();
+
+	            if (rs.next()) {
+	                // Usuario y contraseña correctos
+	                VentanaUsuarios vu = new VentanaUsuarios();
+	                vu.setVisible(true);
+	                dispose();
+	            } else {
+	                // No coinciden
+	                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+	            }
+
+	        } catch (Exception ex) {
+	            JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
+	            ex.printStackTrace();
+	        }
+	    }
+	}
+}
