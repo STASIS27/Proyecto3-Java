@@ -135,7 +135,7 @@ public class VentanaAñadirClase extends JFrame implements ActionListener {
         monitoresMap = new HashMap<>();
         try (Connection con = (Connection) ConexionBD.getConexion();
              Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery("SELECT m.Id_Monitor, p.Nombre FROM monitor m JOIN persona p ON m.Id_Monitor = p.Id_Persona")) {
+             ResultSet rs = st.executeQuery("SELECT m.Id_Monitor, p.Nombre FROM monitor m JOIN persona p ON m.Id_Persona_Aux = p.Id_Persona")) {
 
             while (rs.next()) {
                 String idAux = rs.getString("Id_Monitor");
