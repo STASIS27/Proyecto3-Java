@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Desktop;
 
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
@@ -26,6 +27,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URI;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
@@ -260,6 +262,18 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		 if (e.getSource() == btnRegistrarse) {
+	            try {
+	                URI uri = new URI("http://localhost/LenguajeDeMarcas/Proyecto3Boostrap/indexproyect.html");
+	                if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+	                    Desktop.getDesktop().browse(uri);
+	                } else {
+	                    System.err.println("El navegador no es compatible en este sistema.");
+	                }
+	            } catch (Exception ex) {
+	                ex.printStackTrace();
+	            }
+	        }
 	   if (e.getSource() == btnIniciarSesion) {
 	        String correo = textCorreo.getText();
 	        String contra = String.valueOf(passwordField.getPassword());
@@ -268,8 +282,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
 	            return;
 	        }
-
-	        // Lógica de conexión a la base de datos.
+	        // Lógica de conexión a la base de datos
 	        try (Connection con = (Connection) ConexionBD.getConexion()) {
 	        	String query = "SELECT p.* FROM persona p JOIN cliente c ON p.Id_Persona = c.Id_Persona_Aux WHERE p.Correo = ? AND p.Contraseña = ?";
                 PreparedStatement ps = con.prepareStatement(query);
