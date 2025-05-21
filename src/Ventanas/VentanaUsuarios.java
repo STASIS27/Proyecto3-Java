@@ -1,215 +1,286 @@
 package Ventanas;
 
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ImageIcon;
-import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 
-public class VentanaUsuarios extends JFrame implements ActionListener{
+import BaseDeDatos.ConexionBD;
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField textField;
-	private JPasswordField passwordField;
-	private JButton btnVolver; 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaUsuarios frame = new VentanaUsuarios();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+public class VentanaUsuarios extends JFrame implements ActionListener {
+    private String correoUsuario;
+    private JPanel contentPane;
+    private JTable tablaClases;
+    private DefaultTableModel modeloTabla;
+    private JButton btnApuntarse, btnDesapuntarse, btnVolver;
 
-	/**
-	 * Create the frame.
-	 */
-	public VentanaUsuarios() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
-		contentPane.setBackground(new Color(0, 64, 128));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                VentanaUsuarios frame = new VentanaUsuarios("usuario@example.com"); // Cambia correo para test
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JPanel contentPane_1 = new JPanel();
-		contentPane_1.setBounds(217, 10, 1, 1);
-		contentPane_1.setLayout(null);
-		contentPane_1.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane_1.setBackground(new Color(0, 64, 128));
-		contentPane.add(contentPane_1);
-		
-		JPanel panel = new JPanel();
-		panel.setLayout(null);
-		panel.setBorder(new LineBorder(Color.BLACK, 2, true));
-		panel.setBounds(23, 26, 230, 211);
-		contentPane_1.add(panel);
-		
-		JPanel panel_2_1 = new JPanel();
-		panel_2_1.setBackground(new Color(231, 231, 231));
-		panel_2_1.setBounds(20, 72, 394, 139);
-		contentPane.add(panel_2_1);
-		panel_2_1.setLayout(null);
-	
-		String[] columnas = {"Clase", "Horario"};
-		String[][] datos = {
-		    {"Yoga", "Lunes 10:00"},
-		    {"Pilates", "Miércoles 12:00"},
-		    {"Spinning", "Viernes 18:00"}
-		};
+    public VentanaUsuarios(String correoUsuario) {
+        this.correoUsuario = correoUsuario;
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 600, 400);
+        contentPane = new JPanel();
+        contentPane.setBackground(new Color(0, 64, 128));
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
 
-		JTable tablaClases = new JTable(datos, columnas) {
-		    @Override
-		    public boolean isCellEditable(int row, int column) {
-		        return false; 
-		    }
-		};
+        JLabel lblTitulo = new JLabel("Clases Disponibles");
+        lblTitulo.setFont(new Font("Segoe UI Black", Font.BOLD, 18));
+        lblTitulo.setForeground(new Color(0, 128, 255));
+        lblTitulo.setBounds(20, 10, 300, 30);
+        contentPane.add(lblTitulo);
 
-		tablaClases.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-		tablaClases.setRowHeight(20);
+        // Tabla con columnas: Nombre clase, Nombre monitor, Horario, Fecha
+        String[] columnas = {"Clase", "Monitor", "Horario", "Fecha"};
+        modeloTabla = new DefaultTableModel(null, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // No editable
+            }
+        };
 
-		JScrollPane scrollPane = new JScrollPane(tablaClases);
-		scrollPane.setBounds(10, 50, 370, 60);
-		panel_2_1.add(scrollPane);
+        tablaClases = new JTable(modeloTabla);
+        tablaClases.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        tablaClases.setRowHeight(22);
 
+        JScrollPane scrollPane = new JScrollPane(tablaClases);
+        scrollPane.setBounds(20, 50, 540, 220);
+        contentPane.add(scrollPane);
 
-		JButton btnApuntarse = new JButton("Apuntarse");
-		btnApuntarse.setForeground(new Color(0, 128, 255));
-		btnApuntarse.setFont(new Font("Segoe UI Black", Font.PLAIN, 10));
-		btnApuntarse.setBounds(60, 115, 100, 20);
-		panel_2_1.add(btnApuntarse);
+        btnApuntarse = new JButton("Apuntarse");
+        btnApuntarse.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
+        btnApuntarse.setForeground(new Color(0, 128, 255));
+        btnApuntarse.setBounds(150, 290, 130, 30);
+        contentPane.add(btnApuntarse);
 
-	
-		JButton btnDesapuntarse = new JButton("Desapuntarse");
-		btnDesapuntarse.setForeground(new Color(0, 128, 255));
-		btnDesapuntarse.setFont(new Font("Segoe UI Black", Font.PLAIN, 10));
-		btnDesapuntarse.setBounds(220, 115, 120, 20);
-		panel_2_1.add(btnDesapuntarse);
+        btnDesapuntarse = new JButton("Desapuntarse");
+        btnDesapuntarse.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
+        btnDesapuntarse.setForeground(new Color(0, 128, 255));
+        btnDesapuntarse.setBounds(330, 290, 130, 30);
+        contentPane.add(btnDesapuntarse);
 
-		
-		textField = new JTextField();
-		textField.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
-		textField.setColumns(10);
-		textField.setBounds(75, 92, 147, 19);
-		panel.add(textField);
-		
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setLayout(null);
-		panel_1.setBorder(new LineBorder(Color.BLACK, 2, true));
-		panel_1.setBackground(new Color(0, 128, 255));
-		panel_1.setBounds(10, 47, 416, 170);
-		contentPane_1.add(panel_1);
-		
-		
-		JPanel panel_1_1 = new JPanel();
-		panel_1_1.setLayout(null);
-		panel_1_1.setBorder(new LineBorder(Color.BLACK, 2, true));
-		panel_1_1.setBounds(130, 21, 166, 35);
-		contentPane.add(panel_1_1);
-		
-		JLabel lblNewLabel_1_1 = new JLabel("DAM FIT");
-		lblNewLabel_1_1.setForeground(new Color(0, 0, 128));
-		lblNewLabel_1_1.setFont(new Font("Segoe UI Black", Font.BOLD, 16));
-		lblNewLabel_1_1.setBounds(47, 5, 126, 24);
-		panel_1_1.add(lblNewLabel_1_1);
-		
-		JLabel lblNewLabel_2_1_1 = new JLabel("New label");
-		lblNewLabel_2_1_1.setIcon(new ImageIcon(VentanaUsuarios.class.getResource("/Imagenes/fitness-7071849_1920 (1).png")));
-		lblNewLabel_2_1_1.setForeground(Color.LIGHT_GRAY);
-		lblNewLabel_2_1_1.setBounds(10, -13, 35, 57);
-		panel_1_1.add(lblNewLabel_2_1_1);
-		
-		JLabel lblNewLabel_2_2 = new JLabel("New label");
-		lblNewLabel_2_2.setIcon(new ImageIcon(VentanaUsuarios.class.getResource("/Imagenes/fitness-7071849_1920 (1)2.png")));
-		lblNewLabel_2_2.setBounds(128, -11, 35, 58);
-		panel_1_1.add(lblNewLabel_2_2);
-		panel_2_1.setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("Clases Disponibles");
-		lblNewLabel.setForeground(new Color(0, 128, 255));
-		lblNewLabel.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
-		lblNewLabel.setBounds(38, -20, 132, 73);
-		panel_2_1.add(lblNewLabel);
-		
-		JLabel lblNewLabel_1 = new JLabel("La duración de las clases es de 1 hora");
-		lblNewLabel_1.setForeground(new Color(0, 128, 255));
-		lblNewLabel_1.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
-		lblNewLabel_1.setBounds(38, 0, 302, 73);
-		panel_2_1.add(lblNewLabel_1);
-		
-		btnVolver = new JButton("Volver");
-		btnVolver.addActionListener(this);
-		btnVolver.setForeground(new Color(0, 128, 255));
-		btnVolver.setFont(new Font("Segoe UI Black", Font.BOLD, 10));
-		btnVolver.setBackground(Color.WHITE);
-		btnVolver.setBounds(313, 221, 101, 32);
-		contentPane.add(btnVolver);
-	
-		btnApuntarse.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        int filaSeleccionada = tablaClases.getSelectedRow();
-		        if (filaSeleccionada != -1) {
-		            String clase = (String) tablaClases.getValueAt(filaSeleccionada, 0);
-		            JOptionPane.showMessageDialog(null, "Te has apuntado a la clase de " + clase + ".");
-		        } else {
-		            JOptionPane.showMessageDialog(null, "Selecciona una clase para apuntarte.", "Aviso", JOptionPane.WARNING_MESSAGE);
-		        }
-		    }
-		});
+        btnVolver = new JButton("Volver");
+        btnVolver.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
+        btnVolver.setForeground(new Color(0, 128, 255));
+        btnVolver.setBounds(480, 330, 80, 25);
+        contentPane.add(btnVolver);
 
-		btnDesapuntarse.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        int filaSeleccionada = tablaClases.getSelectedRow();
-		        if (filaSeleccionada != -1) {
-		            String clase = (String) tablaClases.getValueAt(filaSeleccionada, 0);
-		            JOptionPane.showMessageDialog(null, "Te has desapuntado de la clase de " + clase + ".");
-		        } else {
-		            JOptionPane.showMessageDialog(null, "Selecciona una clase para desapuntarte.", "Aviso", JOptionPane.WARNING_MESSAGE);
-		        }
-		    }
-		});
+        btnApuntarse.addActionListener(e -> {
+            int fila = tablaClases.getSelectedRow();
+            if (fila == -1) {
+                JOptionPane.showMessageDialog(this, "Selecciona una clase para apuntarte.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            String nombreClase = (String) modeloTabla.getValueAt(fila, 0);
+            String horario = (String) modeloTabla.getValueAt(fila, 2);
+            String fecha = (String) modeloTabla.getValueAt(fila, 3);
 
-		
-		
-	}
-	
-	
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		 if(e.getSource().equals(btnVolver)) {
-		        VentanapPrincipal vp = new VentanapPrincipal();
-		        vp.setVisible(true);
-		        dispose(); 
-		
-	}
-}
+            String idClase = obtenerIdClase(nombreClase, horario, fecha);
+            if (idClase == null) {
+                JOptionPane.showMessageDialog(this, "Clase no encontrada en base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            apuntarse(idClase);
+            cargarClases(); // refresca tabla por si quieres mostrar estado actualizado
+        });
+
+        btnDesapuntarse.addActionListener(e -> {
+            int fila = tablaClases.getSelectedRow();
+            if (fila == -1) {
+                JOptionPane.showMessageDialog(this, "Selecciona una clase para desapuntarte.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            String nombreClase = (String) modeloTabla.getValueAt(fila, 0);
+            String horario = (String) modeloTabla.getValueAt(fila, 2);
+            String fecha = (String) modeloTabla.getValueAt(fila, 3);
+
+            String idClase = obtenerIdClase(nombreClase, horario, fecha);
+            if (idClase == null) {
+                JOptionPane.showMessageDialog(this, "Clase no encontrada en base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            desapuntarse(idClase);
+            cargarClases();
+        });
+
+        btnVolver.addActionListener(this);
+
+        cargarClases();
+    }
+
+    private void cargarClases() {
+        // Vaciar modelo
+        modeloTabla.setRowCount(0);
+
+        String sql = "SELECT c.Nombre AS NombreClase, p.Nombre, c.Duracion, c.Fecha " +
+                     "FROM clase c " +
+                     "JOIN monitor m ON c.Id_Monitor_Aux = m.Id_Monitor " +
+                     "JOIN persona p ON m.Id_Persona_Aux = p.Id_Persona " +
+                     "ORDER BY c.Fecha, c.Duracion";
+
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String nombreClase = rs.getString("NombreClase");
+                String nombreMonitor = rs.getString("Nombre");
+                String horario = rs.getString("Duracion");
+                String fecha = rs.getString("Fecha");
+
+                modeloTabla.addRow(new Object[]{nombreClase, nombreMonitor, horario, fecha});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar clases:\n" + e.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private String obtenerIdClase(String nombreClase, String horario, String fecha) {
+        String sql = "SELECT Id_Clase FROM clase WHERE Nombre = ? AND Duracion = ? AND Fecha = ?";
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, nombreClase);
+            ps.setString(2, horario);
+            ps.setString(3, fecha);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("Id_Clase");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al obtener ID clase:\n" + e.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
+        }
+        return null;
+    }
+
+    private int obtenerNumSocioPorCorreo(String correo) {
+        String sql = "SELECT c.Num_Socio FROM cliente c JOIN persona p ON c.Id_Persona_Aux = p.Id_Persona WHERE p.Correo = ?";
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, correo);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("Num_Socio");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al obtener Num_Socio:\n" + e.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
+        }
+        return -1;
+    }
+
+    private boolean estaApuntado(String idClase) {
+        int numSocioAux = obtenerNumSocioPorCorreo(correoUsuario);
+        if (numSocioAux == -1) return false;
+
+        String sql = "SELECT * FROM `cliente-clase` WHERE Num_Socio_Aux = ? AND Id_Clase_Aux = ?";
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, numSocioAux);
+            ps.setString(2, idClase);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al comprobar apuntado:\n" + e.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
+    }
+
+    private void apuntarse(String idClase) {
+        if (estaApuntado(idClase)) {
+            JOptionPane.showMessageDialog(this, "Ya estás apuntado a esta clase.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int numSocio = obtenerNumSocioPorCorreo(correoUsuario);
+        if (numSocio == -1) {
+            JOptionPane.showMessageDialog(this, "Usuario no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String sqlInsert = "INSERT INTO `cliente-clase` (Num_Socio_Aux, Id_Clase_Aux, Horario) VALUES (?, ?, ?)";
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sqlInsert)) {
+            ps.setInt(1, numSocio);
+            ps.setString(2, idClase);
+            ps.setInt(3, numSocio);
+            int filas = ps.executeUpdate();
+            if (filas > 0) {
+                JOptionPane.showMessageDialog(this, "Te has apuntado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo apuntar a la clase.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error en la base de datos:\n" + e.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void desapuntarse(String idClase) {
+        if (!estaApuntado(idClase)) {
+            JOptionPane.showMessageDialog(this, "No estás apuntado a esta clase.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int numSocio = obtenerNumSocioPorCorreo(correoUsuario);
+        if (numSocio == -1) {
+            JOptionPane.showMessageDialog(this, "Usuario no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String sqlDelete = "DELETE FROM `cliente-clase` WHERE Num_Socio_Aux = ? AND Id_Clase_Aux = ?";
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sqlDelete)) {
+            ps.setInt(1, numSocio);
+            ps.setString(2, idClase);
+            int filas = ps.executeUpdate();
+            if (filas > 0) {
+                JOptionPane.showMessageDialog(this, "Te has desapuntado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo desapuntar de la clase.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error en la base de datos:\n" + e.getMessage(), "Error BD", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnVolver) {
+            // Aquí asumo que tienes otra ventana llamada VentanaMenuUsuarios
+            VentanaMenuUsuarios vmu = new VentanaMenuUsuarios(correoUsuario);
+            vmu.setVisible(true);
+            dispose();
+        }
+    }
 }

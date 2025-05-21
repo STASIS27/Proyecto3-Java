@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
 import BaseDeDatos.ConexionBD;
+import javax.swing.border.LineBorder;
 
 public class VentanaVerClientes extends JFrame {
 
@@ -19,35 +20,41 @@ public class VentanaVerClientes extends JFrame {
         setLocationRelativeTo(null);
         contentPane = new JPanel();
         contentPane.setBackground(new Color(0, 64, 128));
-        contentPane.setLayout(null);
         setContentPane(contentPane);
-
-        JLabel lblTitulo = new JLabel("LISTA DE CLIENTES");
-        lblTitulo.setFont(new Font("Segoe UI Black", Font.BOLD, 18));
-        lblTitulo.setForeground(Color.WHITE);
-        lblTitulo.setBounds(200, 10, 250, 30);
-        contentPane.add(lblTitulo);
+        contentPane.setLayout(null);
 
         txtBuscar = new JTextField();
-        txtBuscar.setBounds(20, 50, 200, 25);
+        txtBuscar.setBounds(20, 68, 200, 25);
         contentPane.add(txtBuscar);
 
         JButton btnBuscar = new JButton("Buscar");
-        btnBuscar.setBounds(230, 50, 100, 25);
+        btnBuscar.setBounds(232, 68, 100, 25);
         contentPane.add(btnBuscar);
 
         JButton btnVolver = new JButton("Volver");
-        btnVolver.setBounds(470, 50, 100, 25);
+        btnVolver.setBounds(470, 68, 100, 25);
         contentPane.add(btnVolver);
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(20, 90, 550, 250);
+        scrollPane.setBounds(20, 103, 550, 250);
         contentPane.add(scrollPane);
 
         tableClientes = new JTable();
         model = new DefaultTableModel(new Object[]{"ID", "Nombre", "Apellidos", "Correo", "Teléfono"}, 0);
         tableClientes.setModel(model);
         scrollPane.setViewportView(tableClientes);
+        
+        JPanel panelTitulo = new JPanel();
+        panelTitulo.setBounds(143, 10, 276, 40);
+        panelTitulo.setLayout(null);
+        panelTitulo.setBorder(new LineBorder(Color.BLACK, 2, true));
+        contentPane.add(panelTitulo);
+        
+        JLabel lblClientesRegistrados = new JLabel("Clientes Registrados");
+        lblClientesRegistrados.setForeground(new Color(0, 0, 128));
+        lblClientesRegistrados.setFont(new Font("Segoe UI Black", Font.BOLD, 16));
+        lblClientesRegistrados.setBounds(50, 5, 178, 30);
+        panelTitulo.add(lblClientesRegistrados);
 
         // Cargar todos los clientes al iniciar
         cargarClientes("");

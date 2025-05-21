@@ -260,11 +260,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void actionPerformed(ActionEvent e) {
-	    if (e.getSource() == btnRegistrarse) {
-	        VentanaRegistro vr = new VentanaRegistro();
-	        vr.setVisible(true);
-	        dispose();
-	    }if (e.getSource() == btnIniciarSesion) {
+	   if (e.getSource() == btnIniciarSesion) {
 	        String correo = textCorreo.getText();
 	        String contra = String.valueOf(passwordField.getPassword());
 
@@ -284,8 +280,8 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 
 	            if (rs.next()) {
 	                // Usuario y contraseña correctos
-	                VentanaUsuarios vu = new VentanaUsuarios();
-	                vu.setVisible(true);
+	            	VentanaMenuUsuarios vmu = new VentanaMenuUsuarios(correo);
+	                vmu.setVisible(true);
 	                dispose();
 	            } else {
 	                // No coinciden

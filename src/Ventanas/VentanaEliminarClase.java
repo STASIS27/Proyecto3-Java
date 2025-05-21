@@ -7,9 +7,12 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
+
 import BaseDeDatos.ConexionBD;
 
 public class VentanaEliminarClase extends JFrame implements ActionListener {
@@ -19,7 +22,10 @@ public class VentanaEliminarClase extends JFrame implements ActionListener {
     private JTextField txtNombreClase;
     private JSpinner spinnerHorario;
     private JSpinner spinnerPlazas;
+    private JSpinner spinnerFecha;
     private JButton btnEliminar, btnVolver;
+    private JComboBox<String> comboMonitores;
+    private HashMap<String, String> monitoresMap; // nombre -> idAux
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -34,7 +40,7 @@ public class VentanaEliminarClase extends JFrame implements ActionListener {
 
     public VentanaEliminarClase() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 400, 300);
+        setBounds(100, 100, 420, 400);
         setLocationRelativeTo(null);
         contentPane = new JPanel();
         contentPane.setBackground(new Color(0, 64, 128));
@@ -45,13 +51,13 @@ public class VentanaEliminarClase extends JFrame implements ActionListener {
         JPanel panelTitulo = new JPanel();
         panelTitulo.setLayout(null);
         panelTitulo.setBorder(new LineBorder(Color.BLACK, 2, true));
-        panelTitulo.setBounds(100, 10, 200, 40);
+        panelTitulo.setBounds(72, 10, 238, 40);
         contentPane.add(panelTitulo);
 
         JLabel lblTitulo = new JLabel("ELIMINAR CLASE");
         lblTitulo.setFont(new Font("Segoe UI Black", Font.BOLD, 16));
         lblTitulo.setForeground(new Color(0, 0, 128));
-        lblTitulo.setBounds(30, 5, 180, 30);
+        lblTitulo.setBounds(50, 5, 150, 30);
         panelTitulo.add(lblTitulo);
 
         JLabel lblNombreClase = new JLabel("Nombre de la clase:");
@@ -65,32 +71,53 @@ public class VentanaEliminarClase extends JFrame implements ActionListener {
         contentPane.add(txtNombreClase);
         txtNombreClase.setColumns(10);
 
+        JLabel lblFecha = new JLabel("Fecha:");
+        lblFecha.setForeground(Color.WHITE);
+        lblFecha.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
+        lblFecha.setBounds(50, 110, 140, 20);
+        contentPane.add(lblFecha);
+
+        spinnerFecha = new JSpinner(new SpinnerDateModel());
+        spinnerFecha.setEditor(new JSpinner.DateEditor(spinnerFecha, "yyyy-MM-dd"));
+        spinnerFecha.setBounds(190, 110, 140, 22);
+        contentPane.add(spinnerFecha);
+
         JLabel lblHorario = new JLabel("Horario:");
         lblHorario.setForeground(Color.WHITE);
         lblHorario.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
-        lblHorario.setBounds(50, 110, 140, 20);
+        lblHorario.setBounds(50, 150, 140, 20);
         contentPane.add(lblHorario);
 
         spinnerHorario = new JSpinner(new SpinnerDateModel());
         spinnerHorario.setEditor(new JSpinner.DateEditor(spinnerHorario, "HH:mm"));
-        spinnerHorario.setBounds(190, 110, 140, 22);
+        spinnerHorario.setBounds(190, 150, 140, 22);
         contentPane.add(spinnerHorario);
 
         JLabel lblPlazas = new JLabel("Plazas:");
         lblPlazas.setForeground(Color.WHITE);
         lblPlazas.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
-        lblPlazas.setBounds(50, 150, 140, 20);
+        lblPlazas.setBounds(50, 190, 140, 20);
         contentPane.add(lblPlazas);
 
         spinnerPlazas = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
-        spinnerPlazas.setBounds(190, 150, 140, 22);
+        spinnerPlazas.setBounds(190, 190, 140, 22);
         contentPane.add(spinnerPlazas);
+
+        JLabel lblMonitor = new JLabel("Monitor:");
+        lblMonitor.setForeground(Color.WHITE);
+        lblMonitor.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
+        lblMonitor.setBounds(50, 230, 140, 20);
+        contentPane.add(lblMonitor);
+
+        comboMonitores = new JComboBox<>();
+        comboMonitores.setBounds(190, 230, 140, 22);
+        contentPane.add(comboMonitores);
 
         btnEliminar = new JButton("Eliminar");
         btnEliminar.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
         btnEliminar.setForeground(new Color(0, 128, 255));
         btnEliminar.setBackground(Color.WHITE);
-        btnEliminar.setBounds(70, 210, 100, 30);
+        btnEliminar.setBounds(70, 280, 100, 30);
         btnEliminar.addActionListener(this);
         contentPane.add(btnEliminar);
 
@@ -98,42 +125,98 @@ public class VentanaEliminarClase extends JFrame implements ActionListener {
         btnVolver.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
         btnVolver.setForeground(new Color(0, 128, 255));
         btnVolver.setBackground(Color.WHITE);
-        btnVolver.setBounds(210, 210, 100, 30);
+        btnVolver.setBounds(210, 280, 100, 30);
         btnVolver.addActionListener(this);
         contentPane.add(btnVolver);
+
+        cargarMonitores();  // Cargar monitores y validar si hay
+    }
+
+    private void cargarMonitores() {
+        monitoresMap = new HashMap<>();
+        try (Connection con = (Connection) ConexionBD.getConexion();
+             Statement st = con.createStatement();
+             // Ahora coger nombre de persona (suponiendo tabla persona y monitor con idAux)
+             ResultSet rs = st.executeQuery(
+                 "SELECT m.Id_Monitor, p.Nombre FROM monitor m JOIN persona p ON m.Id_Persona_Aux = p.Id_Persona")) {
+
+            comboMonitores.removeAllItems();
+
+            while (rs.next()) {
+                String idAux = rs.getString("Id_Monitor");
+                String nombre = rs.getString("Nombre");
+                comboMonitores.addItem(nombre);
+                monitoresMap.put(nombre, idAux);
+            }
+
+            if (comboMonitores.getItemCount() == 0) {
+                btnEliminar.setEnabled(false);
+                JOptionPane.showMessageDialog(this,
+                        "No hay monitores en la base de datos. No puedes eliminar clases.",
+                        "Sin monitores",
+                        JOptionPane.WARNING_MESSAGE);
+            } else {
+                btnEliminar.setEnabled(true);
+                comboMonitores.setSelectedIndex(0);
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al cargar los monitores:\n" + ex.getMessage(),
+                    "Error BD",
+                    JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+            btnEliminar.setEnabled(false);
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnEliminar) {
             String nombreClase = txtNombreClase.getText().trim();
-            java.util.Date fechaUtil = (java.util.Date) spinnerHorario.getValue();
-            java.sql.Time horaSql = new java.sql.Time(fechaUtil.getTime());
-            int plazas = (int) spinnerPlazas.getValue();
 
-            if (nombreClase.isEmpty()) {
+            if (nombreClase.isEmpty() || comboMonitores.getSelectedIndex() == -1) {
                 JOptionPane.showMessageDialog(this, "Por favor, rellena todos los campos.", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            Connection con = null;
-            PreparedStatement ps = null;
+            java.util.Date fechaUtil = (java.util.Date) spinnerFecha.getValue();
+            Date fechaSql = new Date(fechaUtil.getTime());
 
-            try {
-                con = (Connection) ConexionBD.getConexion();
-                String sql = "DELETE FROM clase WHERE Nombre = ? AND Duracion = ? AND Plazas = ?";
-                ps = (PreparedStatement) con.prepareStatement(sql);
+            java.util.Date horaUtil = (java.util.Date) spinnerHorario.getValue();
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(horaUtil);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+
+            Time horaSql = new Time(cal.getTimeInMillis());
+
+
+            int plazas = (int) spinnerPlazas.getValue();
+
+            String monitorNombre = (String) comboMonitores.getSelectedItem();
+            String idMonitor = monitoresMap.get(monitorNombre);
+
+            try (Connection con = (Connection) ConexionBD.getConexion();
+                 PreparedStatement ps = (PreparedStatement) con.prepareStatement(
+                     "DELETE FROM clase WHERE Nombre = ? AND Fecha = ? AND Duracion = ? AND Plazas = ? AND Id_Monitor_Aux = ?")) {
+
                 ps.setString(1, nombreClase);
-                ps.setTime(2, horaSql);
-                ps.setInt(3, plazas);
+                ps.setDate(2, fechaSql);
+                ps.setTime(3, horaSql);
+                ps.setInt(4, plazas);
+                ps.setString(5, idMonitor);
 
                 int filas = ps.executeUpdate();
 
                 if (filas > 0) {
                     JOptionPane.showMessageDialog(this, "Clase eliminada correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     txtNombreClase.setText("");
+                    spinnerFecha.setValue(new java.util.Date());
                     spinnerHorario.setValue(new java.util.Date());
                     spinnerPlazas.setValue(1);
+                    comboMonitores.setSelectedIndex(0);
                 } else {
                     JOptionPane.showMessageDialog(this, "No se encontró una clase con esos datos.", "No encontrada", JOptionPane.WARNING_MESSAGE);
                 }
@@ -141,12 +224,6 @@ public class VentanaEliminarClase extends JFrame implements ActionListener {
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "Error al eliminar la clase:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace();
-            } finally {
-                try {
-                    if (ps != null) ps.close();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
             }
         }
 
@@ -157,3 +234,4 @@ public class VentanaEliminarClase extends JFrame implements ActionListener {
         }
     }
 }
+

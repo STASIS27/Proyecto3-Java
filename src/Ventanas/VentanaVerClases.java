@@ -32,7 +32,7 @@ public class VentanaVerClases extends JFrame implements ActionListener {
 
     public VentanaVerClases() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 500, 400);
+        setBounds(100, 100, 600, 400);  // Más ancho para columnas adicionales
         setLocationRelativeTo(null);
         contentPane = new JPanel();
         contentPane.setBackground(new Color(0, 64, 128));
@@ -43,32 +43,20 @@ public class VentanaVerClases extends JFrame implements ActionListener {
         JPanel panelSuperior = new JPanel();
         panelSuperior.setBackground(new Color(0, 64, 128));
         panelSuperior.setBorder(new LineBorder(Color.BLACK, 2, true));
-        panelSuperior.setPreferredSize(new Dimension(500, 50));
+        panelSuperior.setPreferredSize(new Dimension(600, 50));
         contentPane.add(panelSuperior, BorderLayout.NORTH);
         panelSuperior.setLayout(null);
-        
-        JPanel panelTitulo = new JPanel();
-        panelTitulo.setBounds(249, 7, 1, 1);
-        panelTitulo.setLayout(null);
-        panelTitulo.setBorder(new LineBorder(Color.BLACK, 2, true));
-        panelSuperior.add(panelTitulo);
-        
-        JLabel lblTitulo = new JLabel("ELIMINAR CLASE");
-        lblTitulo.setForeground(new Color(0, 0, 128));
-        lblTitulo.setFont(new Font("Segoe UI Black", Font.BOLD, 16));
-        lblTitulo.setBounds(30, 5, 180, 30);
-        panelTitulo.add(lblTitulo);
-        
+
         JPanel panelTitulo_1 = new JPanel();
         panelTitulo_1.setLayout(null);
         panelTitulo_1.setBorder(new LineBorder(Color.BLACK, 2, true));
-        panelTitulo_1.setBounds(0, 0, 500, 50);
+        panelTitulo_1.setBounds(0, 0, 600, 50);
         panelSuperior.add(panelTitulo_1);
-        
+
         JLabel lblClasesRegistradas = new JLabel("CLASES REGISTRADAS");
         lblClasesRegistradas.setForeground(new Color(0, 0, 128));
         lblClasesRegistradas.setFont(new Font("Segoe UI Black", Font.BOLD, 16));
-        lblClasesRegistradas.setBounds(157, 10, 198, 30);
+        lblClasesRegistradas.setBounds(200, 10, 220, 30);
         panelTitulo_1.add(lblClasesRegistradas);
 
         tablaClases = new JTable();
@@ -90,21 +78,33 @@ public class VentanaVerClases extends JFrame implements ActionListener {
     }
 
     private void cargarClases() {
-        DefaultTableModel modelo = new DefaultTableModel(new String[]{"Nombre", "Horario", "Plazas"}, 0);
+        DefaultTableModel modelo = new DefaultTableModel(
+            new String[]{"Nombre", "Horario", "Plazas", "Fecha", "Monitor"}, 0);
+
         Connection con = null;
         Statement st = null;
         ResultSet rs = null;
 
         try {
             con = (Connection) ConexionBD.getConexion();
+            String sql = "SELECT c.Nombre, c.Duracion, c.Plazas, c.Fecha, p.Nombre AS monitor " +
+                         "FROM clase c " +
+                         "LEFT JOIN monitor m ON c.Id_Monitor_Aux = m.Id_Monitor " +
+                         "LEFT JOIN persona p ON m.Id_Persona_Aux = p.Id_Persona";
+
             st = (Statement) con.createStatement();
-            rs = st.executeQuery("SELECT Nombre, Duracion, Plazas FROM clase");
+            rs = st.executeQuery(sql);
 
             while (rs.next()) {
                 String nombre = rs.getString("Nombre");
                 Time duracion = rs.getTime("Duracion");
                 int plazas = rs.getInt("Plazas");
-                modelo.addRow(new Object[]{nombre, duracion.toString(), plazas});
+                Date fecha = rs.getDate("Fecha");
+                String monitor = rs.getString("Monitor");
+
+                String horarioFormateado = duracion.toString().substring(0, 5);
+
+                modelo.addRow(new Object[]{nombre, horarioFormateado, plazas, fecha.toString(), monitor});
             }
 
             tablaClases.setModel(modelo);
@@ -123,6 +123,7 @@ public class VentanaVerClases extends JFrame implements ActionListener {
         }
     }
 
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnVolver) {
@@ -132,3 +133,4 @@ public class VentanaVerClases extends JFrame implements ActionListener {
         }
     }
 }
+

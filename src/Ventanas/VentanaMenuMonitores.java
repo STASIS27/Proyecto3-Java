@@ -8,6 +8,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -20,6 +22,10 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 
 public class VentanaMenuMonitores extends JFrame implements ActionListener {
@@ -276,38 +282,57 @@ public class VentanaMenuMonitores extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		 if(e.getSource().equals(btnVolver)) {
-		        VentanaMonitores vm = new VentanaMonitores();
-		        vm.setVisible(true);
-		        dispose();
-		 }
-		        if(e.getSource().equals(btnVerClientes)) {
-			        VentanaVerClientes vvc = new VentanaVerClientes();
-			        vvc.setVisible(true);
-			        dispose();
-			        
-		
+	    if (e.getSource().equals(btnVolver)) {
+	        VentanaMonitores vm = new VentanaMonitores();
+	        vm.setVisible(true);
+	        dispose();
+	    }
+
+	    if (e.getSource().equals(btnVerClientes)) {
+	        VentanaVerClientes vvc = new VentanaVerClientes();
+	        vvc.setVisible(true);
+	        dispose();
+	    }
+
+	    if (e.getSource().equals(btnVerClases)) {
+	        VentanaVerClases vvcc = new VentanaVerClases();
+	        vvcc.setVisible(true);
+	        dispose();
+	    }
+
+	    if (e.getSource().equals(btnAñadirClase)) {
+	        if (hayMonitores()) {
+	            VentanaAñadirClase vac = new VentanaAñadirClase();
+	            vac.setVisible(true);
+	            dispose();
+	        } else {
+	            JOptionPane.showMessageDialog(this, "No hay monitores registrados en la base de datos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+	        }
+	    }
+
+	    if (e.getSource().equals(btnEliminarClases)) {
+	        if (hayMonitores()) {
+	            VentanaEliminarClase vec = new VentanaEliminarClase();
+	            vec.setVisible(true);
+	            dispose();
+	        } else {
+	            JOptionPane.showMessageDialog(this, "No hay monitores registrados en la base de datos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+	        }
+	    }
 	}
-		        if(e.getSource().equals(btnVerClases)) {
-			        VentanaVerClases vvcc = new VentanaVerClases();
-			        vvcc.setVisible(true);
-			        dispose();
-			        
-		
+	
+	private boolean hayMonitores() {
+	    boolean hay = false;
+	    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/dam-fit", "root", "");
+	         Statement st = con.createStatement();
+	         ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM monitor")) {
+	        if (rs.next() && rs.getInt(1) > 0) {
+	            hay = true;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+	    }
+	    return hay;
 	}
-		        if(e.getSource().equals(btnAñadirClase)) {
-			        VentanaAñadirClase vac = new VentanaAñadirClase();
-			        vac.setVisible(true);
-			        dispose();
-			        
-		
-	}
-		        if(e.getSource().equals(btnEliminarClases)) {
-			        VentanaEliminarClase vec = new VentanaEliminarClase();
-			        vec.setVisible(true);
-			        dispose();
-			        
-		
-	}
-}
 }
