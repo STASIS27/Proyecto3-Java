@@ -11,147 +11,151 @@ import java.sql.*;
 import javax.swing.border.LineBorder;
 
 public class VentanaMenuUsuarios extends JFrame implements ActionListener {
-    private String correoUsuario;
+	// Objetos
+	private String correoUsuario;
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JButton btnVerClasesDisponibles, btnVerMisClases, btnVolver;
+	private JPanel panelTitulo;
+	private JLabel lblMenuUsuario;
 
-    private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
-    private JButton btnVerClasesDisponibles, btnVerMisClases, btnVolver;
-    private JPanel panelTitulo;
-    private JLabel lblMenuUsuario;
+	public static void main(String[] args) {
+		EventQueue.invokeLater(() -> {
+			try {
+				VentanaMenuUsuarios frame = new VentanaMenuUsuarios("");
+				frame.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+	}
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                VentanaMenuUsuarios frame = new VentanaMenuUsuarios("");
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+	public VentanaMenuUsuarios(String correoUsuario) {
+		// Correo del usuario logeado
+		this.correoUsuario = correoUsuario;
+//Parte Grafica
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 400, 250);
+		setLocationRelativeTo(null);
 
-    public VentanaMenuUsuarios(String correoUsuario) {
-          // Aquí el usuario logueado o pasado al constructor
-        this.correoUsuario = correoUsuario;
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(0, 64, 128));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 400, 250);
-        setLocationRelativeTo(null);
+		btnVerClasesDisponibles = new JButton("Ver Clases Disponibles");
+		btnVerClasesDisponibles.setBounds(100, 70, 200, 30);
+		btnVerClasesDisponibles.setBackground(new Color(0, 128, 255));
+		btnVerClasesDisponibles.setForeground(Color.WHITE);
+		btnVerClasesDisponibles.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
+		btnVerClasesDisponibles.addActionListener(this);
+		contentPane.add(btnVerClasesDisponibles);
 
-        contentPane = new JPanel();
-        contentPane.setBackground(new Color(0, 64, 128));
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        setContentPane(contentPane);
-        contentPane.setLayout(null);
+		btnVerMisClases = new JButton("Ver Mis Clases");
+		btnVerMisClases.setBounds(100, 110, 200, 30);
+		btnVerMisClases.setBackground(new Color(0, 128, 255));
+		btnVerMisClases.setForeground(Color.WHITE);
+		btnVerMisClases.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
+		btnVerMisClases.addActionListener(this);
+		contentPane.add(btnVerMisClases);
 
-        btnVerClasesDisponibles = new JButton("Ver Clases Disponibles");
-        btnVerClasesDisponibles.setBounds(100, 70, 200, 30);
-        btnVerClasesDisponibles.setBackground(new Color(0, 128, 255));
-        btnVerClasesDisponibles.setForeground(Color.WHITE);
-        btnVerClasesDisponibles.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
-        btnVerClasesDisponibles.addActionListener(this);
-        contentPane.add(btnVerClasesDisponibles);
+		btnVolver = new JButton("Volver");
+		btnVolver.setBounds(150, 160, 100, 30);
+		btnVolver.setBackground(Color.WHITE);
+		btnVolver.setForeground(new Color(0, 128, 255));
+		btnVolver.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
+		btnVolver.addActionListener(this);
+		contentPane.add(btnVolver);
 
-        btnVerMisClases = new JButton("Ver Mis Clases");
-        btnVerMisClases.setBounds(100, 110, 200, 30);
-        btnVerMisClases.setBackground(new Color(0, 128, 255));
-        btnVerMisClases.setForeground(Color.WHITE);
-        btnVerMisClases.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
-        btnVerMisClases.addActionListener(this);
-        contentPane.add(btnVerMisClases);
+		panelTitulo = new JPanel();
+		panelTitulo.setLayout(null);
+		panelTitulo.setBorder(new LineBorder(Color.BLACK, 2, true));
+		panelTitulo.setBounds(81, 10, 238, 40);
+		contentPane.add(panelTitulo);
 
-        btnVolver = new JButton("Volver");
-        btnVolver.setBounds(150, 160, 100, 30);
-        btnVolver.setBackground(Color.WHITE);
-        btnVolver.setForeground(new Color(0, 128, 255));
-        btnVolver.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
-        btnVolver.addActionListener(this);
-        contentPane.add(btnVolver);
-        
-        panelTitulo = new JPanel();
-        panelTitulo.setLayout(null);
-        panelTitulo.setBorder(new LineBorder(Color.BLACK, 2, true));
-        panelTitulo.setBounds(81, 10, 238, 40);
-        contentPane.add(panelTitulo);
-        
-        lblMenuUsuario = new JLabel("MENU USUARIO");
-        lblMenuUsuario.setForeground(new Color(0, 0, 128));
-        lblMenuUsuario.setFont(new Font("Segoe UI Black", Font.BOLD, 16));
-        lblMenuUsuario.setBounds(50, 5, 150, 30);
-        panelTitulo.add(lblMenuUsuario);
-    }
+		lblMenuUsuario = new JLabel("MENU USUARIO");
+		lblMenuUsuario.setForeground(new Color(0, 0, 128));
+		lblMenuUsuario.setFont(new Font("Segoe UI Black", Font.BOLD, 16));
+		lblMenuUsuario.setBounds(50, 5, 150, 30);
+		panelTitulo.add(lblMenuUsuario);
+	}
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(btnVolver)) {
-           VentanapPrincipal vp = new VentanapPrincipal();
-           vp.setVisible(true);
-           dispose();
-        }
+	@Override
+	// Botones para cada opcion
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource().equals(btnVolver)) {
+			VentanapPrincipal vp = new VentanapPrincipal();
+			vp.setVisible(true);
+			dispose();
+		}
 
-        if (e.getSource().equals(btnVerClasesDisponibles)) {
-            if (hayClasesDisponibles()) {
-                // Aquí lanzar ventana para ver clases disponibles
-              VentanaUsuarios vu = new VentanaUsuarios(correoUsuario);
-              vu.setVisible(true);
-              dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "No hay clases disponibles en este momento.", "Información", JOptionPane.INFORMATION_MESSAGE);
-            }
-        }
+		if (e.getSource().equals(btnVerClasesDisponibles)) {
+			if (hayClasesDisponibles()) {
+				// Aquí lanzar ventana para ver clases disponibles
+				VentanaUsuarios vu = new VentanaUsuarios(correoUsuario);
+				vu.setVisible(true);
+				dispose();
+			} else {
+				JOptionPane.showMessageDialog(this, "No hay clases disponibles en este momento.", "Información",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
 
-        if (e.getSource().equals(btnVerMisClases)) {
-            if (tieneClasesApuntado()) {
-                // Aquí lanzar ventana para ver clases en las que el usuario está apuntado
-            	  VentanaVerClasesUsuario vvcu = new VentanaVerClasesUsuario(correoUsuario);
-                  vvcu.setVisible(true);
-                  dispose();
-              
-            } else {
-                JOptionPane.showMessageDialog(this, "No estás apuntado a ninguna clase.", "Información", JOptionPane.INFORMATION_MESSAGE);
-            }
-        }
-    }
+		if (e.getSource().equals(btnVerMisClases)) {
+			if (tieneClasesApuntado()) {
+				// Aquí lanzar ventana para ver clases en las que el usuario está apuntado
+				VentanaVerClasesUsuario vvcu = new VentanaVerClasesUsuario(correoUsuario);
+				vvcu.setVisible(true);
+				dispose();
 
-    private boolean hayClasesDisponibles() {
-        boolean hay = false;
-        String sql = "SELECT COUNT(*) FROM clase"; // Ajusta el nombre y estructura de la tabla según tu BD
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/dam-fit", "root", "");
-             Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+			} else {
+				JOptionPane.showMessageDialog(this, "No estás apuntado a ninguna clase.", "Información",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+	}
 
-            if (rs.next()) {
-                hay = rs.getInt(1) > 0;
-            }
+//Metodo apra comprobar en la base de datos si hay clases disponibples
+	private boolean hayClasesDisponibles() {
+		boolean hay = false;
+		String sql = "SELECT COUNT(*) FROM clase";
+		try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/dam-fit", "root", "");
+				Statement st = con.createStatement();
+				ResultSet rs = st.executeQuery(sql)) {
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        return hay;
-    }
+			if (rs.next()) {
+				hay = rs.getInt(1) > 0;
+			}
 
-    private boolean tieneClasesApuntado() {
-        boolean tiene = false;
-        // Ejemplo con tabla de relación usuario_clase, donde usuarioId es el identificador del usuario
-        String sql = "SELECT COUNT(*) FROM `cliente-clase` cc " +
-                "JOIN cliente c ON cc.Num_Socio_Aux = c.Num_Socio " +
-                "JOIN persona p ON c.Id_Persona_Aux = p.Id_Persona " +
-                "WHERE p.Correo = ?";
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/dam-fit", "root", "");
-             PreparedStatement pst = con.prepareStatement(sql)) {
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		return hay;
+	}
 
-            pst.setString(1, correoUsuario);
-            ResultSet rs = pst.executeQuery();
+//Metodo para ver las clases a la que esta apuntado la persona
+	private boolean tieneClasesApuntado() {
+		boolean tiene = false;
+		String sql = "SELECT COUNT(*) FROM `cliente-clase` cc " + "JOIN cliente c ON cc.Num_Socio_Aux = c.Num_Socio "
+				+ "JOIN persona p ON c.Id_Persona_Aux = p.Id_Persona " + "WHERE p.Correo = ?";
+		try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost/dam-fit", "root", "");
+				PreparedStatement pst = con.prepareStatement(sql)) {
 
-            if (rs.next()) {
-                tiene = rs.getInt(1) > 0;
-            }
+			pst.setString(1, correoUsuario);
+			ResultSet rs = pst.executeQuery();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        return tiene;
-    }
+			if (rs.next()) {
+				tiene = rs.getInt(1) > 0;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		return tiene;
+	}
 }
