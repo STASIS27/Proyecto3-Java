@@ -42,7 +42,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 
 public class VentanapPrincipal extends JFrame implements ActionListener {
-
+	
+	// Declaracion de objetos
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textCorreo;
@@ -52,6 +53,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	private JPasswordField passwordField;
 	private JLabel lblIniciaSesinComo;
 	private JTabbedPane tabbedPane;
+	// Creacion de credenciales estaticas de acceso
 	private final String usuario = "usuario123";
 	private final String password = "123usuario";
 	private JToggleButton tgOjo;
@@ -75,6 +77,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	// Todo esto es a nivel grafico,como se ve la ventana
 	public VentanapPrincipal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -264,6 +267,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		 if (e.getSource() == btnRegistrarse) {
 	            try {
+	            	//Este apartado usando el objeto URI nos permite salir al navegador donde esta la pagina de registro
 	                URI uri = new URI("http://localhost/LenguajeDeMarcas/Proyecto3Boostrap/indexproyect.html");
 	                if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 	                    Desktop.getDesktop().browse(uri);
@@ -277,7 +281,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	   if (e.getSource() == btnIniciarSesion) {
 	        String correo = textCorreo.getText();
 	        String contra = String.valueOf(passwordField.getPassword());
-
+	        // Validador de los campos
 	        if (correo.isEmpty() || contra.isEmpty()) {
 	            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
 	            return;

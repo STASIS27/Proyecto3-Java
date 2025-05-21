@@ -13,7 +13,7 @@ import com.mysql.jdbc.Statement;
 import BaseDeDatos.ConexionBD;
 
 public class VentanaVerClases extends JFrame implements ActionListener {
-
+	// Declaracion de objetos
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTable tablaClases;
@@ -29,7 +29,8 @@ public class VentanaVerClases extends JFrame implements ActionListener {
             }
         });
     }
-
+    
+    // Todo esto es a nivel grafico,como se ve la ventana
     public VentanaVerClases() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 600, 400);  // Más ancho para columnas adicionales
@@ -78,6 +79,7 @@ public class VentanaVerClases extends JFrame implements ActionListener {
     }
 
     private void cargarClases() {
+        // Crea un modelo de tabla con columnas para mostrar informacion de las clases
         DefaultTableModel modelo = new DefaultTableModel(
             new String[]{"Nombre", "Horario", "Plazas", "Fecha", "Monitor"}, 0);
 
@@ -86,15 +88,20 @@ public class VentanaVerClases extends JFrame implements ActionListener {
         ResultSet rs = null;
 
         try {
+            // Obtiene la conexion a la base de datos
             con = (Connection) ConexionBD.getConexion();
+
+            // Consulta SQL que obtiene datos de clases y sus monitores relacionados
             String sql = "SELECT c.Nombre, c.Duracion, c.Plazas, c.Fecha, p.Nombre AS monitor " +
                          "FROM clase c " +
                          "LEFT JOIN monitor m ON c.Id_Monitor_Aux = m.Id_Monitor " +
                          "LEFT JOIN persona p ON m.Id_Persona_Aux = p.Id_Persona";
 
+            // Ejecuta la consulta
             st = (Statement) con.createStatement();
             rs = st.executeQuery(sql);
 
+            // Recorre los resultados y los agrega a la tabla
             while (rs.next()) {
                 String nombre = rs.getString("Nombre");
                 Time duracion = rs.getTime("Duracion");
@@ -102,18 +109,23 @@ public class VentanaVerClases extends JFrame implements ActionListener {
                 Date fecha = rs.getDate("Fecha");
                 String monitor = rs.getString("Monitor");
 
+                // Formatea la hora (HH:mm)
                 String horarioFormateado = duracion.toString().substring(0, 5);
 
+                // Agrega una fila al modelo
                 modelo.addRow(new Object[]{nombre, horarioFormateado, plazas, fecha.toString(), monitor});
             }
 
+            // Establece el modelo en la tabla
             tablaClases.setModel(modelo);
 
         } catch (SQLException e) {
+            // Muestra error si ocurre algun problema al consultar la base de datos
             JOptionPane.showMessageDialog(this, "Error al cargar las clases:\n" + e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } finally {
+            // Cierra recursos abiertos (ResultSet y Statement)
             try {
                 if (rs != null) rs.close();
                 if (st != null) st.close();
@@ -126,10 +138,11 @@ public class VentanaVerClases extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        // Si se hace clic en el boton "Volver"
         if (e.getSource() == btnVolver) {
             VentanaMenuMonitores vm = new VentanaMenuMonitores();
-            vm.setVisible(true);
-            dispose();
+            vm.setVisible(true); 
+            dispose(); // Cierra la ventana actual
         }
     }
 }

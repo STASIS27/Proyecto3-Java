@@ -1,4 +1,4 @@
-package Ventanas;
+	package Ventanas;
 
 import java.awt.EventQueue;
 
@@ -24,12 +24,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class VentanaMonitores extends JFrame implements ActionListener {
-
+	// Declaracion de objetos
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textUsuario;
 	private JPasswordField pswContra;
 	private JButton btnVolver, btnIniciarSesion;
+	// Creacion de credenciales estaticas de acceso
 	private final String usuario = "monitor123";
 	private final String password = "123monitor";
 
@@ -52,6 +53,7 @@ public class VentanaMonitores extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
+	// Todo esto es a nivel grafico,como se ve la ventana
 	public VentanaMonitores() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -137,24 +139,30 @@ public class VentanaMonitores extends JFrame implements ActionListener {
 
 	@SuppressWarnings("deprecation")
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(btnVolver)) {
-			VentanapPrincipal vp = new VentanapPrincipal();
-			vp.setVisible(true);
-			dispose();
-		}
-		if (e.getSource().equals(btnIniciarSesion)) {
-		    if (pswContra.getText().isEmpty() || textUsuario.getText().isEmpty()) {
-		        JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-		    } else if (pswContra.getText().equals(password) && textUsuario.getText().equals(usuario)) {
-		        VentanaMenuMonitores vmm = new VentanaMenuMonitores();
-			vmm.setVisible(true);
-			dispose();
-			}
-			else {
-				JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
-			}
-		}
+	    // Si se hace clic en el boton "Volver"
+	    if (e.getSource().equals(btnVolver)) {
+	        VentanapPrincipal vp = new VentanapPrincipal(); // Crea la ventana principal
+	        vp.setVisible(true); 
+	        dispose(); // Cierra la ventana actual
+	    }
 
+	    // Si se hace clic en "Iniciar sesión"
+	    if (e.getSource().equals(btnIniciarSesion)) {
+	        // Si algún campo esta vacio, muestra error
+	        if (pswContra.getText().isEmpty() || textUsuario.getText().isEmpty()) {
+	            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+	        } 
+	        // Si usuario y contraseña son correctos
+	        else if (pswContra.getText().equals(password) && textUsuario.getText().equals(usuario)) {
+	            VentanaMenuMonitores vmm = new VentanaMenuMonitores(); // Abre menu de monitores
+	            vmm.setVisible(true); // 
+	            dispose(); // Cierra la ventana actual
+	        } 
+	        // Si son incorrectos, muestra mensaje de error
+	        else {
+	            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+	        }
+	    }
 	}
 
 }

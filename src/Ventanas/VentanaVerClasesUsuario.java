@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import BaseDeDatos.ConexionBD;
 
 public class VentanaVerClasesUsuario extends JFrame implements ActionListener {
+	// Declaracion de objetos
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTable tablaMisClases;
@@ -32,6 +33,7 @@ public class VentanaVerClasesUsuario extends JFrame implements ActionListener {
             frame.setVisible(true);
         });
     }
+    // Todo esto es a nivel grafico,como se ve la ventana
     public VentanaVerClasesUsuario(String correoUsuario) {
         this.correoUsuario = correoUsuario;
 
@@ -78,30 +80,38 @@ public class VentanaVerClasesUsuario extends JFrame implements ActionListener {
     }
 
     private int obtenerNumSocioPorCorreo(String correo) {
+        // Consulta SQL para obtener el número de socio a partir del correo
         String sql = "SELECT c.Num_Socio FROM cliente c JOIN persona p ON c.Id_Persona_Aux = p.Id_Persona WHERE p.Correo = ?";
         try (Connection con = ConexionBD.getConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
+
+            // Inserta el correo como parametro en la consulta preparada
             ps.setString(1, correo);
+
+            // Ejecuta la consulta
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
+                    // Devuelve el numero de socio si se encuentra
                     return rs.getInt("Num_Socio");
                 }
             }
         } catch (SQLException e) {
+            // Muestra un mensaje de error si ocurre un problema con la base de datos
             e.printStackTrace();
             JOptionPane.showMessageDialog(this,
                 "Error al obtener Num_Socio:\n" + e.getMessage(),
                 "Error BD",
                 JOptionPane.ERROR_MESSAGE);
         }
+        // Devuelve -1 si no se encuentra el socio
         return -1;
     }
-
     private void cargarMisClases() {
-        modeloTabla.setRowCount(0);
+        modeloTabla.setRowCount(0); // Limpia la tabla antes de cargar nuevos datos
 
-        int numSocio = obtenerNumSocioPorCorreo(correoUsuario);
+        int numSocio = obtenerNumSocioPorCorreo(correoUsuario); // Obtiene el numero de socio con el correo del usuario
         if (numSocio == -1) {
+            // Si no se encuentra el socio, muestra un mensaje de error
             JOptionPane.showMessageDialog(this,
                 "No se encontró tu usuario en la base de datos.",
                 "Error",
@@ -109,12 +119,13 @@ public class VentanaVerClasesUsuario extends JFrame implements ActionListener {
             return;
         }
 
+        // Consulta SQL que obtiene las clases a las que está inscrito el socio
         String sql = """
             SELECT
                 c.Nombre AS NombreClase,
-                p.Nombre      AS Monitor,
-                c.Duracion     AS Horario,
-                c.Fecha       AS Fecha
+                p.Nombre AS Monitor,
+                c.Duracion AS Horario,
+                c.Fecha AS Fecha
             FROM `cliente-clase` cc
             JOIN cliente cl ON cc.Num_Socio_Aux = cl.Num_Socio
             JOIN clase c ON cc.Id_Clase_Aux = c.Id_Clase
@@ -126,9 +137,13 @@ public class VentanaVerClasesUsuario extends JFrame implements ActionListener {
 
         try (Connection con = ConexionBD.getConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, numSocio);
+
+            ps.setInt(1, numSocio); // Inserta el numero de socio en la consulta
+
             try (ResultSet rs = ps.executeQuery()) {
                 boolean hayClases = false;
+
+                // Recorre los resultados y agrega las clases a la tabla
                 while (rs.next()) {
                     hayClases = true;
                     String nombreClase   = rs.getString("NombreClase");
@@ -138,6 +153,8 @@ public class VentanaVerClasesUsuario extends JFrame implements ActionListener {
 
                     modeloTabla.addRow(new Object[] { nombreClase, nombreMonitor, horario, fecha });
                 }
+
+                // Si no hay clases, muestra un mensaje informativo
                 if (!hayClases) {
                     JOptionPane.showMessageDialog(this,
                         "No estás apuntado a ninguna clase.",
@@ -146,6 +163,7 @@ public class VentanaVerClasesUsuario extends JFrame implements ActionListener {
                 }
             }
         } catch (SQLException e) {
+            // Muestra un mensaje si ocurre un error al cargar las clases
             e.printStackTrace();
             JOptionPane.showMessageDialog(this,
                 "Error al cargar tus clases:\n" + e.getMessage(),
@@ -157,7 +175,7 @@ public class VentanaVerClasesUsuario extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnVolver) {
-            // Regresar a la ventana de menú de usuarios, por ejemplo:
+            // Regresar a la ventana de menu de usuarios
             VentanaMenuUsuarios vmu = new VentanaMenuUsuarios(correoUsuario);
             vmu.setVisible(true);
             dispose();
