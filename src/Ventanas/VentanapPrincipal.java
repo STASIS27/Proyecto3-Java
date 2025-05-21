@@ -269,7 +269,7 @@ public class VentanapPrincipal extends JFrame implements ActionListener {
 	            return;
 	        }
 
-	        // Lógica de conexión a la base de datos
+	        // Lógica de conexión a la base de datos.
 	        try (Connection con = (Connection) ConexionBD.getConexion()) {
 	        	String query = "SELECT p.* FROM persona p JOIN cliente c ON p.Id_Persona = c.Id_Persona_Aux WHERE p.Correo = ? AND p.Contraseña = ?";
                 PreparedStatement ps = con.prepareStatement(query);
