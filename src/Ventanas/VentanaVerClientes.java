@@ -85,7 +85,7 @@ public class VentanaVerClientes extends JFrame {
             con = ConexionBD.getConexion(); // Obtener conexion a la base de datos
 
             // Consulta SQL que busca clientes cuyo nombre coincida parcialmente
-            String sql = "SELECT c.Id_Persona_Aux, p.Nombre, p.Apellido, p.Correo, p.Telefono " +
+            String sql = "SELECT c.Id_Persona_Aux, p.Nombre, p.Apellido, p.Correo, p.Teléfono " +
                          "FROM cliente c JOIN persona p ON c.Id_Persona_Aux = p.Id_Persona " +
                          "WHERE p.Nombre LIKE ?";
 
@@ -100,7 +100,7 @@ public class VentanaVerClientes extends JFrame {
                 String nombre = rs.getString("Nombre");
                 String apellidos = rs.getString("Apellido");
                 String email = rs.getString("Correo");
-                String telefono = rs.getString("Telefono");
+                String telefono = rs.getString("Teléfono");
                 model.addRow(new Object[]{id, nombre, apellidos, email, telefono});
                 encontrado = true;
             }

@@ -185,7 +185,18 @@ public class VentanaAñadirClase extends JFrame implements ActionListener {
 
 			int plazas = (int) spinnerPlazas.getValue();
 			java.util.Date fechaUtil = (java.util.Date) spinnerFecha.getValue();
+
+			// === NUEVA COMPROBACIÓN ===
+			java.util.Date fechaHoy = new java.util.Date();
+			if (fechaUtil.before(fechaHoy)) {
+				JOptionPane.showMessageDialog(this, "No se puede añadir una clase con una fecha pasada.", "Fecha inválida",
+						JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			// ===========================
+
 			Date fechaSql = new Date(fechaUtil.getTime());
+
 			// Cogemos el nombre del monitor y el id lo cojo gracias a que esta relacionado
 			// ya por el hashmap
 			String monitorNombre = (String) comboMonitores.getSelectedItem();

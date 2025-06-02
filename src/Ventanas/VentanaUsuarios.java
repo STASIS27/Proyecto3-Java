@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
@@ -30,7 +29,7 @@ public class VentanaUsuarios extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JTable tablaClases;
 	private DefaultTableModel modeloTabla;
-	private JButton btnApuntarse, btnDesapuntarse, btnVolver;
+	private JButton btnApuntarse, btnVolver;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
@@ -81,21 +80,16 @@ public class VentanaUsuarios extends JFrame implements ActionListener {
 		btnApuntarse = new JButton("Apuntarse");
 		btnApuntarse.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
 		btnApuntarse.setForeground(new Color(0, 128, 255));
-		btnApuntarse.setBounds(150, 290, 130, 30);
+		btnApuntarse.setBounds(211, 292, 130, 30);
 		contentPane.add(btnApuntarse);
-
-		btnDesapuntarse = new JButton("Desapuntarse");
-		btnDesapuntarse.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
-		btnDesapuntarse.setForeground(new Color(0, 128, 255));
-		btnDesapuntarse.setBounds(330, 290, 130, 30);
-		contentPane.add(btnDesapuntarse);
 
 		btnVolver = new JButton("Volver");
 		btnVolver.setFont(new Font("Segoe UI Black", Font.BOLD, 12));
 		btnVolver.setForeground(new Color(0, 128, 255));
 		btnVolver.setBounds(480, 330, 80, 25);
 		contentPane.add(btnVolver);
-//Boton para apuntarse, con avisos si no selecciona clase o no la encuentra
+
+		// Boton para apuntarse, con avisos si no selecciona clase o no la encuentra
 		btnApuntarse.addActionListener(e -> {
 			int fila = tablaClases.getSelectedRow();
 			if (fila == -1) {
@@ -115,27 +109,6 @@ public class VentanaUsuarios extends JFrame implements ActionListener {
 			}
 			apuntarse(idClase);
 			cargarClases(); // refresca tabla por si quieres mostrar estado actualizado
-		});
-//Boton para desapuntarse, lo mismo que para apuntarse
-		btnDesapuntarse.addActionListener(e -> {
-			int fila = tablaClases.getSelectedRow();
-			if (fila == -1) {
-				JOptionPane.showMessageDialog(this, "Selecciona una clase para desapuntarte.", "Aviso",
-						JOptionPane.WARNING_MESSAGE);
-				return;
-			}
-			String nombreClase = (String) modeloTabla.getValueAt(fila, 0);
-			String horario = (String) modeloTabla.getValueAt(fila, 2);
-			String fecha = (String) modeloTabla.getValueAt(fila, 3);
-
-			String idClase = obtenerIdClase(nombreClase, horario, fecha);
-			if (idClase == null) {
-				JOptionPane.showMessageDialog(this, "Clase no encontrada en base de datos.", "Error",
-						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			desapuntarse(idClase);
-			cargarClases();
 		});
 
 		btnVolver.addActionListener(this);
@@ -171,7 +144,7 @@ public class VentanaUsuarios extends JFrame implements ActionListener {
 		}
 	}
 
-//Metodo para obtener el id de la clase especifica,para apuntarse o desapuntarse
+//Metodo para obtener el id de la clase especifica, para apuntarse
 	private String obtenerIdClase(String nombreClase, String horario, String fecha) {
 		String sql = "SELECT Id_Clase FROM clase WHERE Nombre = ? AND Duracion = ? AND Fecha = ?";
 		try (Connection con = ConexionBD.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -191,7 +164,7 @@ public class VentanaUsuarios extends JFrame implements ActionListener {
 		return null;
 	}
 
-//Metodo para conseguir el numero del socio a traves del correo y apuntarle a la clase o desapuntarle
+//Metodo para conseguir el numero del socio a traves del correo y apuntarle a la clase
 	private int obtenerNumSocioPorCorreo(String correoUsuario) {
 		String sql = "SELECT c.Num_Socio FROM cliente c JOIN persona p ON c.Id_Persona_Aux = p.Id_Persona WHERE p.Correo = ?";
 		try (Connection con = ConexionBD.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -208,6 +181,7 @@ public class VentanaUsuarios extends JFrame implements ActionListener {
 		}
 		return -1;
 	}
+
 //Metodo para comprobar si el usuario esta apuntado en esa clase
 	private boolean estaApuntado(String idClase) {
 		int numSocioAux = obtenerNumSocioPorCorreo(correoUsuario);
@@ -228,6 +202,7 @@ public class VentanaUsuarios extends JFrame implements ActionListener {
 		}
 		return false;
 	}
+
 //Metodo para apuntarse
 	private void apuntarse(String idClase) {
 		if (estaApuntado(idClase)) {
@@ -266,7 +241,7 @@ public class VentanaUsuarios extends JFrame implements ActionListener {
 			try (PreparedStatement psInsert = con.prepareStatement(sqlInsert)) {
 				psInsert.setInt(1, numSocio);
 				psInsert.setString(2, idClase);
-				psInsert.setInt(3, numSocio); 
+				psInsert.setInt(3, numSocio); // Nota: aquí está como en el original
 
 				int filas = psInsert.executeUpdate();
 				if (filas > 0) {
@@ -285,47 +260,6 @@ public class VentanaUsuarios extends JFrame implements ActionListener {
 				}
 			}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Error en la base de datos:\n" + e.getMessage(), "Error BD",
-					JOptionPane.ERROR_MESSAGE);
-		}
-	}
-//Metodo para desapuntarse
-	private void desapuntarse(String idClase) {
-		if (!estaApuntado(idClase)) {
-			JOptionPane.showMessageDialog(this, "No estás apuntado a esta clase.", "Aviso",
-					JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-
-		int numSocio = obtenerNumSocioPorCorreo(correoUsuario);
-		if (numSocio == -1) {
-			JOptionPane.showMessageDialog(this, "Usuario no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		String sqlDelete = "DELETE FROM `cliente-clase` WHERE Num_Socio_Aux = ? AND Id_Clase_Aux = ?";
-		try (Connection con = ConexionBD.getConexion(); PreparedStatement ps = con.prepareStatement(sqlDelete)) {
-
-			ps.setInt(1, numSocio);
-			ps.setString(2, idClase);
-			int filas = ps.executeUpdate();
-
-			if (filas > 0) {
-				// Aumentar plazas disponibles
-				String sqlUpdatePlazas = "UPDATE clase SET Plazas = Plazas + 1 WHERE Id_Clase = ?";
-				try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdatePlazas)) {
-					psUpdate.setString(1, idClase);
-					psUpdate.executeUpdate();
-				}
-
-				JOptionPane.showMessageDialog(this, "Te has desapuntado correctamente.", "Éxito",
-						JOptionPane.INFORMATION_MESSAGE);
-			} else {
-				JOptionPane.showMessageDialog(this, "No se pudo desapuntar de la clase.", "Error",
-						JOptionPane.ERROR_MESSAGE);
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(this, "Error en la base de datos:\n" + e.getMessage(), "Error BD",
